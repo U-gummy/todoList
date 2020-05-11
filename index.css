@@ -1,0 +1,13 @@
+* {margin:0;padding:0;box-sizing:border-box;}
+body {background:rgb(141, 19, 19)}
+h1 {color:#fff;}
+input[type="text"]::placeholder {color:#ccc;}
+input[type="text"] {display:inline-block;width:400px;height:50px;border:2px solid #ccc;font-size:25px;text-align:left;text-indent:15px;}
+.ygm-clock {text-align:center;}
+.ygm-clock-txt {font-size:80px;color:#fff;}
+.ygm-form {text-align:center;}
+.ygm-grettings {font-size:40px;color:#fff;text-align:center;}
+/* .ygm-form input[type="text"] {} */
+.form,
+.grettings {display:none;}
+.showing {display:block;}

@@ -5,10 +5,10 @@ const CLOCK_CONTENT = document.querySelector(".ygm-clock"),
 
 // 시간 가져오는 함수
 function getTime () { 
-    const DATE = new Date();
-    const HOURS = DATE.getHours();
-    const MINUTES = DATE.getMinutes();
-    const SECONDS = DATE.getSeconds();
+    const DATE = new Date(),
+          HOURS = DATE.getHours(),
+          MINUTES = DATE.getMinutes(),
+          SECONDS = DATE.getSeconds();
     CLOCK_TXT.innerText = `${HOURS < 10 ? `0${HOURS}` : HOURS} : ${MINUTES < 10 ? `0${MINUTES}` : MINUTES} : ${SECONDS < 10 ? `0${SECONDS}` : SECONDS}`;
 }
 
@@ -21,9 +21,12 @@ const FORM = document.querySelector(".ygm-form"),
 
 const USER_LS = "currentUser",
       SHOWING_CN = "showing";
+
+// 사용자 입력 이름 로컬스토리지에 저장 함수
 function saveName (text) {
     localStorage.setItem(USER_LS,text);
 }
+
 function handleSubmit (event) {
     event.preventDefault();
     const currentValue = FORM_INPUT.value;
@@ -42,12 +45,13 @@ function painGretting (text) {
     GRETTING.classList.add(SHOWING_CN);
     GRETTING.innerText = `Hello ${text}`;
 } 
+// 사용자 입력 이름 유무에 따른 함수
 function loadName () {
     const currentUser = localStorage.getItem(USER_LS);
     if(currentUser === null) { // currentUser 없는 경우 
         askForName();
     } else { // currentUser 있는 경우
-        painGretting(currentUser);
+        painGretting(currentUser); 
     }
 
 }

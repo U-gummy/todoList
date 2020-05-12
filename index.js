@@ -29,9 +29,9 @@ function saveName (text) {
 
 function handleSubmit (event) {
     event.preventDefault();
-    const currentValue = FORM_INPUT.value;
-    painGretting(currentValue);
-    saveName(currentValue);
+    const CURRENT_VALUE = FORM_INPUT.value;
+    painGretting(CURRENT_VALUE);
+    saveName(CURRENT_VALUE);
 }
 
 function askForName () {
@@ -47,13 +47,64 @@ function painGretting (text) {
 } 
 // 사용자 입력 이름 유무에 따른 함수
 function loadName () {
-    const currentUser = localStorage.getItem(USER_LS);
-    if(currentUser === null) { // currentUser 없는 경우 
+    const CURRENT_USER = localStorage.getItem(USER_LS);
+    if(CURRENT_USER === null) { // CURRENT_USER 없는 경우 
         askForName();
-    } else { // currentUser 있는 경우
-        painGretting(currentUser); 
+    } else { // CURRENT_USER 있는 경우
+        painGretting(CURRENT_USER); 
     }
 
+    
+}
+
+
+/*==========================================================================================================================*/
+/*====================================================================TODO==================================================*/
+const TODO_FORM = document.querySelector(".ygm-toDoForm"),
+      TODO_INPUT = TODO_FORM.querySelector("input"),
+      TODO_LIST = document.querySelector(".ygm-toDoList");
+
+const TODOS_LS = "toDos";
+
+const TODOS = [];
+
+// TODOS를 가져와 로컬에 저장하는 함수
+function saveToDos () {
+    localStorage.setItem(TODOS_LS, JSON.stringify(TODOS));
+}
+
+// 입력 todo 리스트 화면에 출력하는 함수 
+function paintToDo (text) {
+    const LI = document.createElement("li"),
+          DEL_BTN = document.createElement("button"),
+          SPAN = document.createElement("span"),
+          NEW_ID = TODOS.length +1;
+    DEL_BTN.innerText = "X"
+    SPAN.innerText = text;
+    LI.appendChild(SPAN);
+    LI.appendChild(DEL_BTN);
+    LI.id = NEW_ID;
+    TODO_LIST.appendChild(LI);
+    const TODO_OBJ = { text: text, id: NEW_ID }
+    TODOS.push(TODO_OBJ)
+    saveToDos();
+}
+
+function toDoHandleSubmit (event) {
+    event.preventDefault();
+    const CURRENT_VALUE = TODO_INPUT.value;
+    paintToDo(CURRENT_VALUE);
+    TODO_INPUT.value = "";
+}
+
+function loadToDos () {
+    const LOAD_TODOS = localStorage.getItem(TODOS_LS);
+    if (LOAD_TODOS !== null) {
+        const PARSED_TODOS = JSON.parse(LOAD_TODOS);
+        PARSED_TODOS.forEach(function (toDo){
+            paintToDo(toDo.text);
+        })
+    } 
 }
 
 /*==========================================================================================================================*/
@@ -62,5 +113,7 @@ function init () {
     getTime(); // 시간 가져오는 함수
     setInterval (getTime , 1000);
     loadName();
+    loadToDos();
+    TODO_FORM.addEventListener("submit", toDoHandleSubmit)
 }
 init();

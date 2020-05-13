@@ -21,6 +21,7 @@ const FORM = document.querySelector(".ygm-form"),
 
 const USER_LS = "currentUser",
       SHOWING_CN = "showing";
+      NOTICE_CN = "notice";
 
 // 사용자 입력 이름 로컬스토리지에 저장 함수
 function saveName (text) {
@@ -31,8 +32,13 @@ function saveName (text) {
 function handleSubmit (event) {
     event.preventDefault();
     const CURRENT_VALUE = FORM_INPUT.value;
-    painGretting(CURRENT_VALUE);
-    saveName(CURRENT_VALUE);
+    if (CURRENT_VALUE) { // 입력 value 값이 있는경우
+        painGretting(CURRENT_VALUE);
+        saveName(CURRENT_VALUE);
+    } else {
+        alert("이름을 입력해 주세요!")        
+        FORM_INPUT.classList.add(NOTICE_CN);
+    }
 }
 
 function askForName () {
@@ -112,7 +118,13 @@ function paintToDo (text) {
 function toDoHandleSubmit (event) {
     event.preventDefault();
     const CURRENT_VALUE = TODO_INPUT.value;
-    paintToDo(CURRENT_VALUE);
+    if(CURRENT_VALUE)  { // 입력 value 값이 있는경우
+        paintToDo(CURRENT_VALUE);
+        TODO_INPUT.classList.remove(NOTICE_CN);
+    }else {
+        alert("할 일 목록을 입력해 주세요!")        
+        TODO_INPUT.classList.add(NOTICE_CN);
+    }
     TODO_INPUT.value = "";
 }
 
@@ -181,8 +193,8 @@ function handleGeoSucces(position) {
     const LATITUDE = position.coords.latitude, // 위도
           LONGITUDE = position.coords.longitude; // 경도
     const COORD_OBJ = {
-        latitude , // 위도
-        longitude  // 경도
+        latitude : LATITUDE, // 위도
+        longitude : LONGITUDE // 경도
     };
     saveCoords (COORD_OBJ); // 위도 경도 로컬스토리지 저장 함수
     getWeather (LATITUDE, LONGITUDE)
@@ -204,6 +216,20 @@ function loadCoords () {
     }
 
 }
+
+/*==========================================================================================================================*/
+/*====================================================================RESET==================================================*/
+const BTN_RESET = document.querySelector(".btn-reset");
+
+// 초기화 함수
+function allReset () {
+    if(confirm("초기화 하시겠습까?")) {
+        localStorage.clear();
+        location.reload();
+    }
+}
+// 리셋 버튼 클릭시 초기화 함수 실행 
+BTN_RESET.addEventListener("click",allReset);
 
 /*==========================================================================================================================*/
 /*====================================================================INIT==================================================*/

@@ -1,8 +1,9 @@
 * {margin:0;padding:0;box-sizing:border-box;}
-body {background:#ccc;}
+body {background:#333;}
 h1 {color:#fff;}
 input[type="text"]::placeholder {color:#ccc;}
-input[type="text"] {display:inline-block;width:400px;height:50px;border:2px solid #ccc;font-size:25px;text-align:left;text-indent:15px;}
+input[type="text"] {display:inline-block;width:400px;height:50px;border:2px solid #ccc;font-size:25px;text-align:left;text-indent:15px;outline:none;}
+input[type="text"].notice {border-color:rgb(138, 6, 6)}
 .ygm-clock {text-align:center;}
 .ygm-clock-txt {font-size:80px;color:#fff;}
 .ygm-form, 
@@ -15,13 +16,15 @@ input[type="text"] {display:inline-block;width:400px;height:50px;border:2px soli
 .ygm-toDoList li button {width:30px;height:30px;vertical-align:middle;}
 
 .ygm-weather {display:block;font-size:30px;color:#fff;text-align:right;}
+
+.btn-reset {position:absolute;right:20px;bottom:20px;padding:10px 20px;background:transparent;border:1px solid #fff;font-size:15px;color:#fff;}
 .form,
 .grettings {display:none;}
 .showing {display:block;}
 
-.bgImage {position:absolute;top:0;left:0;z-index:-1;width:100%;height:100%;animation:fadeIn .7s linear;}
+.bgImage {position:absolute;top:0;left:0;z-index:-1;width:100%;height:100%;animation:fadeIn .7s linear;opacity:0.3;}
 
 @keyframes fadeIn {
     0% {opacity:0;}
-    100% {opacity:1;}
+    100% {opacity:0.3;}
 }

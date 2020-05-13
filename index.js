@@ -27,6 +27,7 @@ function saveName (text) {
     localStorage.setItem(USER_LS,text);
 }
 
+// name input enter시 처리하는 함수
 function handleSubmit (event) {
     event.preventDefault();
     const CURRENT_VALUE = FORM_INPUT.value;
@@ -45,16 +46,15 @@ function painGretting (text) {
     GRETTING.classList.add(SHOWING_CN);
     GRETTING.innerText = `Hello ${text}`;
 } 
-// 사용자 입력 이름 유무에 따른 함수
+// 로드 했을 때 함수 
 function loadName () {
     const CURRENT_USER = localStorage.getItem(USER_LS);
+    // 사용자 입력 이름 유무에 따른 조건문
     if(CURRENT_USER === null) { // CURRENT_USER 없는 경우 
         askForName();
     } else { // CURRENT_USER 있는 경우
         painGretting(CURRENT_USER); 
     }
-
-    
 }
 
 
@@ -75,9 +75,11 @@ function deleteToDo (event) {
     const LI = BTN.parentNode;
     // 해당 버튼의 li 마크업 삭제
     TODO_LIST.removeChild(LI);
+    // 해당 li를 제외한 리스트만 리턴 
     const CLEAN_TODOS = TODOS.filter(function(toDo){
         return toDo.id !== parseInt(LI.id);
     });
+    // 해당 선택 li를 제외한 todo리스트 TODOS 변수에 재 대입
     TODOS = CLEAN_TODOS 
     saveToDos(); // 로컬 스토리지에 저장
 } 
@@ -100,11 +102,13 @@ function paintToDo (text) {
     LI.appendChild(DEL_BTN);
     LI.id = NEW_ID;
     TODO_LIST.appendChild(LI);
+
     const TODO_OBJ = { text: text, id: NEW_ID }
     TODOS.push(TODO_OBJ)
     saveToDos();
 }
 
+// todo input enter시 처리하는 함수
 function toDoHandleSubmit (event) {
     event.preventDefault();
     const CURRENT_VALUE = TODO_INPUT.value;
@@ -112,8 +116,10 @@ function toDoHandleSubmit (event) {
     TODO_INPUT.value = "";
 }
 
+// todo 로드 했을 때 함수 
 function loadToDos () {
     const LOAD_TODOS = localStorage.getItem(TODOS_LS);
+    // 로컬스토리지에 todo 리스트가 있을경우 조건문
     if (LOAD_TODOS !== null) {
         const PARSED_TODOS = JSON.parse(LOAD_TODOS);
         PARSED_TODOS.forEach(function (toDo){
@@ -123,12 +129,35 @@ function loadToDos () {
 }
 
 /*==========================================================================================================================*/
+/*==================================================================BACKGROUND================================================*/
+const BODY = document.querySelector("body");
+
+const IMG_NUMBER = 3;
+
+// 이미지 화면 출력 함수
+function paintImage (imgNumber) {
+    const IMAGE = new Image();
+    IMAGE.src = `./images/img_background_${imgNumber + 1}.jpg`;
+    IMAGE.classList.add("bgImage");
+    BODY.appendChild(IMAGE);
+}
+
+// 랜덤 숫자 리턴 함수
+function genRandom () {
+    const NUMBER = Math.floor(Math.random() * IMG_NUMBER);
+    return NUMBER;
+}
+
+/*==========================================================================================================================*/
 /*====================================================================INIT==================================================*/
 function init () {
     getTime(); // 시간 가져오는 함수
-    setInterval (getTime , 1000);
-    loadName();
-    loadToDos();
-    TODO_FORM.addEventListener("submit", toDoHandleSubmit)
+    setInterval (getTime , 1000); // 시계 초 단위로 반복 실행
+    loadName(); // name 로드 했을 때 함수 
+    loadToDos(); // todo 로드 했을 때 함수 
+    TODO_FORM.addEventListener("submit", toDoHandleSubmit); // todo input enter 시 실행 
+    /*background*/
+    const RANDOM_NUMBER = genRandom();
+    paintImage(RANDOM_NUMBER);
 }
 init();

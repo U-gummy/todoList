@@ -149,6 +149,63 @@ function genRandom () {
 }
 
 /*==========================================================================================================================*/
+/*====================================================================WEATHER==================================================*/
+const WEATHER = document.querySelector(".ygm-weather");
+const API_KEY = "55ddba8446ad0a6043821820412b6a33";
+const COORDS = "coords";
+
+// 날씨 정보 가져오는 함수 
+function getWeather (lat, lng) {
+    fetch(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${API_KEY}&units=metric`
+    ).then(function(response){ // 앞에 데이터를 가져온 후 실행 (than)
+        return response.json();
+    }).then(function(json){
+        const TEMPERATURE = json.main.temp; // 현재온도
+        const PLACE = json.name; // 현재위치 
+        WEATHER.innerText = `${TEMPERATURE}º 
+                             ${PLACE}`;
+
+    })
+}
+// 위도 경도 로컬스토리지 저장 함수
+function saveCoords (coordsObj) {
+    localStorage.setItem(COORDS, JSON.stringify(coordsObj)) // 저장값이 string 이어야 한다.
+}
+// 좌표 가져오는데 실패했을때 처리하는 함수
+function handleGeoError () {
+    console.log("Cant access geo location");
+}
+// 좌표 가져오는데 성공했을때 처리하는 함수
+function handleGeoSucces(position) {
+    const LATITUDE = position.coords.latitude, // 위도
+          LONGITUDE = position.coords.longitude; // 경도
+    const COORD_OBJ = {
+        latitude , // 위도
+        longitude  // 경도
+    };
+    saveCoords (COORD_OBJ); // 위도 경도 로컬스토리지 저장 함수
+    getWeather (LATITUDE, LONGITUDE)
+}
+// 좌표 요청 함수
+function askForCoords() {
+    navigator.geolocation.getCurrentPosition(handleGeoSucces, handleGeoError);
+}
+// weather 로드 했을 때 함수 
+function loadCoords () {
+    const LOADED_COORDS = localStorage.getItem(COORDS);
+    // 좌표값이 없을 경우
+    if(LOADED_COORDS === null) {
+        askForCoords(); // 좌표 요청 함수
+    // 좌표값을 이미 있을 경우
+    } else { 
+        const PARSE_COORDS = JSON.parse(LOADED_COORDS);
+        getWeather(PARSE_COORDS.latitude, PARSE_COORDS.longitude);
+    }
+
+}
+
+/*==========================================================================================================================*/
 /*====================================================================INIT==================================================*/
 function init () {
     getTime(); // 시간 가져오는 함수
@@ -159,5 +216,9 @@ function init () {
     /*background*/
     const RANDOM_NUMBER = genRandom();
     paintImage(RANDOM_NUMBER);
+    /*weather*/
+    loadCoords();
+
 }
+
 init();

@@ -6,14 +6,15 @@ input[type="text"] {display:inline-block;width:400px;height:50px;border:2px soli
 .ygm-clock {text-align:center;}
 .ygm-clock-txt {font-size:80px;color:#fff;}
 .ygm-form, 
-.ygm-toDoForm {text-align:center;}
+.ygm-toDoForm {padding-top:30px;text-align:center;}
 .ygm-grettings {font-size:40px;color:#fff;text-align:center;}
 /* .ygm-form input[type="text"] {} */
 
-.ygm-toDoList {text-align:center;}
-.ygm-toDoList li {font-size:30px;color:#fff;}
+.ygm-toDoList {padding-top:10px;text-align:center;}
+.ygm-toDoList li {padding-top:10px;font-size:30px;color:#fff;}
 .ygm-toDoList li button {width:30px;height:30px;vertical-align:middle;}
 
+.ygm-weather {display:block;font-size:30px;color:#fff;text-align:right;}
 .form,
 .grettings {display:none;}
 .showing {display:block;}

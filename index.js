@@ -66,7 +66,21 @@ const TODO_FORM = document.querySelector(".ygm-toDoForm"),
 
 const TODOS_LS = "toDos";
 
-const TODOS = [];
+let TODOS = [];
+
+// todo li 지우는 함수
+function deleteToDo (event) {
+    // console.dir(event.target);
+    const BTN = event.target;
+    const LI = BTN.parentNode;
+    // 해당 버튼의 li 마크업 삭제
+    TODO_LIST.removeChild(LI);
+    const CLEAN_TODOS = TODOS.filter(function(toDo){
+        return toDo.id !== parseInt(LI.id);
+    });
+    TODOS = CLEAN_TODOS 
+    saveToDos(); // 로컬 스토리지에 저장
+} 
 
 // TODOS를 가져와 로컬에 저장하는 함수
 function saveToDos () {
@@ -79,7 +93,8 @@ function paintToDo (text) {
           DEL_BTN = document.createElement("button"),
           SPAN = document.createElement("span"),
           NEW_ID = TODOS.length +1;
-    DEL_BTN.innerText = "X"
+    DEL_BTN.innerText = "X";
+    DEL_BTN.addEventListener("click", deleteToDo)
     SPAN.innerText = text;
     LI.appendChild(SPAN);
     LI.appendChild(DEL_BTN);

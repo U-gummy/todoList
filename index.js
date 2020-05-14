@@ -20,7 +20,8 @@ const FORM = document.querySelector(".ygm-form"),
       GRETTING = document.querySelector(".ygm-grettings");
 
 const USER_LS = "currentUser",
-      SHOWING_CN = "showing";
+      SHOW_CN = "show";
+      HIDE_CN = "hide";
       NOTICE_CN = "notice";
 
 // 사용자 입력 이름 로컬스토리지에 저장 함수
@@ -42,16 +43,17 @@ function handleSubmit (event) {
 }
 
 function askForName () {
-    FORM.classList.add(SHOWING_CN);
+    FORM.classList.add(SHOW_CN);
     FORM.addEventListener("submit", handleSubmit); // input enter 눌렀을시 이벤트 
 }
 
 // 인사말 텍스트 리턴 함수
 function painGretting (text) {
-    FORM.classList.remove(SHOWING_CN);
-    GRETTING.classList.add(SHOWING_CN);
+    FORM.classList.remove(SHOW_CN);
+    GRETTING.classList.add(SHOW_CN);
     GRETTING.innerText = `Hello ${text}`;
 } 
+
 // 로드 했을 때 함수 
 function loadName () {
     const CURRENT_USER = localStorage.getItem(USER_LS);
@@ -69,9 +71,7 @@ function loadName () {
 const TODO_FORM = document.querySelector(".ygm-toDoForm"),
       TODO_INPUT = TODO_FORM.querySelector("input"),
       TODO_LIST = document.querySelector(".ygm-toDoList");
-
 const TODOS_LS = "toDos";
-
 let TODOS = [];
 
 // todo li 지우는 함수
@@ -143,7 +143,6 @@ function loadToDos () {
 /*==========================================================================================================================*/
 /*==================================================================BACKGROUND================================================*/
 const BODY = document.querySelector("body");
-
 const IMG_NUMBER = 3;
 
 // 이미지 화면 출력 함수
@@ -177,17 +176,19 @@ function getWeather (lat, lng) {
         const PLACE = json.name; // 현재위치 
         WEATHER.innerText = `${TEMPERATURE}º 
                              ${PLACE}`;
-
     })
 }
+
 // 위도 경도 로컬스토리지 저장 함수
 function saveCoords (coordsObj) {
     localStorage.setItem(COORDS, JSON.stringify(coordsObj)) // 저장값이 string 이어야 한다.
 }
+
 // 좌표 가져오는데 실패했을때 처리하는 함수
 function handleGeoError () {
     console.log("Cant access geo location");
 }
+
 // 좌표 가져오는데 성공했을때 처리하는 함수
 function handleGeoSucces(position) {
     const LATITUDE = position.coords.latitude, // 위도
@@ -199,10 +200,12 @@ function handleGeoSucces(position) {
     saveCoords (COORD_OBJ); // 위도 경도 로컬스토리지 저장 함수
     getWeather (LATITUDE, LONGITUDE)
 }
+
 // 좌표 요청 함수
 function askForCoords() {
     navigator.geolocation.getCurrentPosition(handleGeoSucces, handleGeoError);
 }
+
 // weather 로드 했을 때 함수 
 function loadCoords () {
     const LOADED_COORDS = localStorage.getItem(COORDS);
@@ -214,7 +217,6 @@ function loadCoords () {
         const PARSE_COORDS = JSON.parse(LOADED_COORDS);
         getWeather(PARSE_COORDS.latitude, PARSE_COORDS.longitude);
     }
-
 }
 
 /*==========================================================================================================================*/
@@ -232,6 +234,67 @@ function allReset () {
 BTN_RESET.addEventListener("click",allReset);
 
 /*==========================================================================================================================*/
+/*====================================================================MAP==================================================*/
+const MAP_CONTAINER = document.querySelector('#map'), // 지도를 표시할 div
+      MAP_VIEW_BTN = document.querySelector('#mapView'); // 지도를 표시할 div
+const MAP_LAT_LNG = localStorage.coords,
+      mapOption = {
+          center: new daum.maps.LatLng(JSON.parse(MAP_LAT_LNG).latitude, JSON.parse(MAP_LAT_LNG).longitude), // 지도의 중심좌표
+          level: 5 // 지도의 확대 레벨
+      };
+
+//지도를 미리 생성
+var map = new daum.maps.Map(MAP_CONTAINER, mapOption);
+//주소-좌표 변환 객체를 생성
+var geocoder = new daum.maps.services.Geocoder();
+//마커를 미리 생성
+var marker = new daum.maps.Marker({ 
+    position: new daum.maps.LatLng(JSON.parse(MAP_LAT_LNG).latitude, JSON.parse(MAP_LAT_LNG).longitude),
+    map: map
+});
+
+// 주소 검색 함수 (daum map js)
+function searchAddress() {
+    new daum.Postcode({
+        oncomplete: function(data) {
+            // 주소로 상세 정보를 검색
+            geocoder.addressSearch(data.address, function(results, status) {
+                // 정상적으로 검색이 완료됐으면
+                if (status === daum.maps.services.Status.OK) {
+                    var result = results[0]; //첫번째 결과의 값을 활용
+                    // 해당 주소에 대한 좌표를 받아서
+                    var coords = new daum.maps.LatLng(result.y, result.x);
+                    map.relayout();
+                    // 지도 중심을 변경한다.
+                    map.setCenter(coords);
+                    // 마커를 결과값으로 받은 위치로 옮긴다.
+                    marker.setPosition(coords)
+                    // 입력 주소 좌표값으로 날씨 함수 호출
+                    getWeather(result.y, result.x);
+                    // 로컬스토리지 저장 할 좌표값 
+                    const MAP_LOCATION = {
+                        latitude : result.y,
+                        longitude : result.x
+                    }
+                    saveCoords(MAP_LOCATION); // 위도 경도 로컬스토리지 저장 함수
+                }
+            });
+        }
+    }).open();
+}
+
+// 지도 show hide 함수
+function mapView () {
+    if (!MAP_CONTAINER.classList.contains(SHOW_CN)) {
+        MAP_CONTAINER.classList.add(SHOW_CN);
+        MAP_VIEW_BTN.innerText = "지도닫기"
+    } else {
+        MAP_CONTAINER.classList.remove(SHOW_CN);
+        MAP_VIEW_BTN.innerText = "지도보기"
+    }
+}
+
+/*==========================================================================================================================*/
 /*====================================================================INIT==================================================*/
 function init () {
     getTime(); // 시간 가져오는 함수
@@ -244,7 +307,6 @@ function init () {
     paintImage(RANDOM_NUMBER);
     /*weather*/
     loadCoords();
-
 }
 
 init();

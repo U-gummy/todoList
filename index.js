@@ -172,7 +172,7 @@ function getWeather (lat, lng) {
         `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${API_KEY}&units=metric`
     ).then(function(response){ // 앞에 데이터를 가져온 후 실행 (than)
         return response.json();
-    }).then(function(json){
+    }).then(function(json){ // 앞에 데이터를 가져온 후 실행 (than)
         const TEMPERATURE = json.main.temp; // 현재온도
         const PLACE = json.name; // 현재위치 
         WEATHER.innerText = `${TEMPERATURE}º 
@@ -194,7 +194,7 @@ function handleGeoSucces(position) {
           LONGITUDE = position.coords.longitude; // 경도
     const COORD_OBJ = {
         latitude : LATITUDE, // 위도
-        longitude : LONGITUDE // 경도
+        longitude : LONGITUDE// 경도
     };
     saveCoords (COORD_OBJ); // 위도 경도 로컬스토리지 저장 함수
     getWeather (LATITUDE, LONGITUDE)

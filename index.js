@@ -253,7 +253,7 @@ var marker = new daum.maps.Marker({
     map: map
 });
 
-// 주소 검색 함수 (daum map js)
+// 주소 검색 함수 (daum, kakao map js)
 function searchAddress() {
     new daum.Postcode({
         oncomplete: function(data) {

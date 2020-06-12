@@ -20,8 +20,8 @@ const FORM = document.querySelector(".ygm-form"),
       GRETTING = document.querySelector(".ygm-grettings");
 
 const USER_LS = "currentUser",
-      SHOW_CN = "show";
-      HIDE_CN = "hide";
+      SHOW_CN = "show",
+      HIDE_CN = "hide",
       NOTICE_CN = "notice";
 
 // 사용자 입력 이름 로컬스토리지에 저장 함수
